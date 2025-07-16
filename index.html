@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alagesan Alagu - Portfolio</title>
+    <title>Alagesan Alagu - Full Stack Developer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -300,6 +300,10 @@
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: all var(--animation-duration) ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
 
         .skill-item:hover {
@@ -321,6 +325,16 @@
 
         .skill-item p {
             color: #666;
+        }
+
+        .skill-badge {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin: 0.3rem;
         }
 
         /* Experience Section */
@@ -414,20 +428,27 @@
             background-color: #f9f9f9;
         }
 
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark-color);
+        }
+
         .cert-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 2rem;
+            padding: 0 1rem;
         }
 
         .cert-card {
             background-color: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: all var(--animation-duration) ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
             opacity: 0;
             transform: translateY(50px);
+            position: relative;
         }
 
         .cert-card.visible {
@@ -436,13 +457,14 @@
         }
 
         .cert-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
         .cert-img {
             height: 200px;
             overflow: hidden;
+            position: relative;
         }
 
         .cert-img img {
@@ -456,8 +478,28 @@
             transform: scale(1.1);
         }
 
+        .cert-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            display: flex;
+            align-items: flex-end;
+            padding: 1rem;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cert-card:hover .cert-overlay {
+            opacity: 1;
+        }
+
         .cert-content {
             padding: 1.5rem;
+            position: relative;
         }
 
         .cert-content h3 {
@@ -469,9 +511,39 @@
         .cert-content p {
             color: #666;
             margin-bottom: 1rem;
+            font-size: 0.9rem;
         }
 
-        .cert-content .btn {
+        .cert-date {
+            position: absolute;
+            top: -15px;
+            right: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .cert-badge {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cert-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cert-btn {
             display: inline-block;
             padding: 0.5rem 1rem;
             background-color: var(--primary-color);
@@ -479,11 +551,85 @@
             border-radius: 5px;
             text-decoration: none;
             font-size: 0.9rem;
-            transition: all var(--animation-duration) ease;
+            transition: all 0.3s ease;
         }
 
-        .cert-content .btn:hover {
+        .cert-btn:hover {
             background-color: var(--dark-color);
+            transform: translateY(-2px);
+        }
+
+        .cert-issuer {
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Modal for certificate view */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            overflow: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+
+        .modal-cert-img {
+            width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 5px;
+        }
+
+        .modal-title {
+            margin-top: 1rem;
+            color: var(--dark-color);
         }
 
         /* Contact Section */
@@ -585,11 +731,37 @@
             font-size: 1rem;
             font-weight: 600;
             transition: all var(--animation-duration) ease;
+            width: 100%;
         }
 
         .submit-btn:hover {
             background-color: var(--dark-color);
             transform: translateY(-3px);
+        }
+
+        .submit-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-message {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .form-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .form-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
         }
 
         /* Footer */
@@ -784,6 +956,10 @@
             .section-title h2 {
                 font-size: 2rem;
             }
+
+            .cert-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
         }
 
         @media (max-width: 576px) {
@@ -797,6 +973,14 @@
 
             .section {
                 padding: 3rem 0;
+            }
+
+            .cert-content h3 {
+                font-size: 1.1rem;
+            }
+
+            .cert-content p {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -827,7 +1011,7 @@
         <div class="container hero-content">
             <div class="hero-text fade-in">
                 <h1>Hi, I'm <span>Alagesan Alagu</span></h1>
-                <p>Web Developer & IT Professional at Growthin IT Solutions</p>
+                <p>Full Stack Developer (MERN & Java) at Growthin IT Solutions</p>
                 <a href="#contact" class="btn">Get In Touch</a>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -847,12 +1031,12 @@
             </div>
             <div class="about-content">
                 <div class="about-img fade-in">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Alagesan Alagu">
+                    <img src="https://github.com/alagesanalagesan/p/blob/main/src/alagu.jpeg" alt="Alagesan Alagu">
                 </div>
                 <div class="about-text fade-in delay-1">
-                    <h3>Web Developer from Sanarpatti</h3>
-                    <p>I'm a passionate web developer currently working at Growthin IT Solutions. With a strong foundation in HTML, CSS, and JavaScript, I create responsive and user-friendly websites that deliver exceptional user experiences.</p>
-                    <p>My journey in the tech industry has been marked by continuous learning and professional growth. I take pride in staying updated with the latest web technologies and best practices.</p>
+                    <h3>Full Stack Developer from Sanarpatti</h3>
+                    <p>I'm a passionate full stack developer specializing in both MERN stack and Java technologies, currently working at Growthin IT Solutions. I build robust, scalable web applications with modern architectures and best practices.</p>
+                    <p>With expertise in both frontend and backend development, I bridge the gap between user experience and technical implementation. My journey in tech includes working with AI technologies and implementing innovative solutions.</p>
                     <div class="info">
                         <div class="info-item">
                             <i class="fas fa-user"></i>
@@ -884,19 +1068,64 @@
             </div>
             <div class="skills-container">
                 <div class="skill-item fade-in">
-                    <i class="fab fa-html5"></i>
-                    <h3>HTML5</h3>
-                    <p>Semantic markup, accessibility standards, and modern HTML5 features for building robust website structures.</p>
+                    <i class="fab fa-react"></i>
+                    <h3>React.js</h3>
+                    <p>Building dynamic, responsive user interfaces with React hooks, context API, and Redux for state management.</p>
+                    <div>
+                        <span class="skill-badge">Hooks</span>
+                        <span class="skill-badge">Redux</span>
+                        <span class="skill-badge">Context API</span>
+                    </div>
                 </div>
                 <div class="skill-item fade-in delay-1">
-                    <i class="fab fa-css3-alt"></i>
-                    <h3>CSS3</h3>
-                    <p>Advanced styling techniques including Flexbox, Grid, animations, and responsive design principles.</p>
+                    <i class="fab fa-node-js"></i>
+                    <h3>Node.js & Express</h3>
+                    <p>Developing scalable backend services and RESTful APIs with Node.js, Express, and middleware integration.</p>
+                    <div>
+                        <span class="skill-badge">REST APIs</span>
+                        <span class="skill-badge">JWT Auth</span>
+                        <span class="skill-badge">Middleware</span>
+                    </div>
                 </div>
                 <div class="skill-item fade-in delay-2">
-                    <i class="fab fa-js"></i>
-                    <h3>JavaScript</h3>
-                    <p>Interactive web development with modern ES6+ features, DOM manipulation, and asynchronous programming.</p>
+                    <i class="fas fa-database"></i>
+                    <h3>Databases</h3>
+                    <p>Working with MongoDB, MySQL, and PostgreSQL for data storage, querying, and optimization.</p>
+                    <div>
+                        <span class="skill-badge">MongoDB</span>
+                        <span class="skill-badge">MySQL</span>
+                        <span class="skill-badge">PostgreSQL</span>
+                    </div>
+                </div>
+                <div class="skill-item fade-in">
+                    <i class="fab fa-java"></i>
+                    <h3>Java Full Stack</h3>
+                    <p>Building enterprise applications with Spring Boot, Hibernate, and Thymeleaf for full stack Java development.</p>
+                    <div>
+                        <span class="skill-badge">Spring Boot</span>
+                        <span class="skill-badge">Hibernate</span>
+                        <span class="skill-badge">JSP</span>
+                    </div>
+                </div>
+                <div class="skill-item fade-in delay-1">
+                    <i class="fas fa-robot"></i>
+                    <h3>AI Technologies</h3>
+                    <p>Implementing AI solutions with TensorFlow, Python, and integrating ML models into web applications.</p>
+                    <div>
+                        <span class="skill-badge">TensorFlow</span>
+                        <span class="skill-badge">Python</span>
+                        <span class="skill-badge">NLP</span>
+                    </div>
+                </div>
+                <div class="skill-item fade-in delay-2">
+                    <i class="fas fa-paint-brush"></i>
+                    <h3>UI/UX & CSS</h3>
+                    <p>Creating beautiful interfaces with Tailwind CSS, Material UI, and responsive design principles.</p>
+                    <div>
+                        <span class="skill-badge">Tailwind</span>
+                        <span class="skill-badge">Material UI</span>
+                        <span class="skill-badge">SASS</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -912,17 +1141,17 @@
                 <div class="timeline-item">
                     <div class="timeline-content">
                         <div class="timeline-date">2022 - Present</div>
-                        <h3>Web Developer</h3>
+                        <h3>Full Stack Developer</h3>
                         <h4>Growthin IT Solutions</h4>
-                        <p>Developing and maintaining responsive websites and web applications. Collaborating with designers and backend developers to create seamless user experiences.</p>
+                        <p>Developing and maintaining full stack applications using MERN stack and Java technologies. Implementing AI solutions and optimizing database performance.</p>
                     </div>
                 </div>
                 <div class="timeline-item">
                     <div class="timeline-content">
                         <div class="timeline-date">2020 - 2022</div>
-                        <h3>Junior Web Developer</h3>
+                        <h3>Junior Full Stack Developer</h3>
                         <h4>Tech Solutions Inc.</h4>
-                        <p>Assisted in building and testing web applications. Learned industry best practices and improved coding skills under senior developer mentorship.</p>
+                        <p>Worked on both frontend and backend development, gaining experience in React, Node.js, and Java Spring Boot frameworks.</p>
                     </div>
                 </div>
             </div>
@@ -936,39 +1165,187 @@
                 <h2>My Certifications</h2>
             </div>
             <div class="cert-grid">
+                <!-- 1. One Month Full Stack Internship - Novitech -->
                 <div class="cert-card">
                     <div class="cert-img">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Web Development Certification">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Full Stack Internship Certificate">
+                        <div class="cert-overlay">Novitech Solutions</div>
                     </div>
                     <div class="cert-content">
-                        <h3>Advanced Web Development</h3>
-                        <p>Certified in advanced web development techniques including responsive design, performance optimization, and modern JavaScript frameworks.</p>
-                        <a href="#" class="btn">View Certificate</a>
+                        <div class="cert-date">2023</div>
+                        <h3>Full Stack Internship</h3>
+                        <p>Completed one month intensive internship in Full Stack Development at Novitech Solutions.</p>
+                        <div class="cert-actions">
+                            <span class="cert-issuer">Novitech</span>
+                            <a href="#" class="cert-btn view-cert" data-cert="cert1">View Certificate</a>
+                        </div>
                     </div>
                 </div>
+
+                <!-- 2. Three Month MERN Stack Internship - Novitech -->
                 <div class="cert-card">
                     <div class="cert-img">
-                        <img src="https://images.unsplash.com/photo-1542626991-cbc4e32524cc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="JavaScript Certification">
+                        <img src="https://images.unsplash.com/photo-1542626991-cbc4e32524cc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="MERN Stack Internship Certificate">
+                        <div class="cert-overlay">Novitech Solutions</div>
                     </div>
                     <div class="cert-content">
-                        <h3>JavaScript Specialist</h3>
-                        <p>Certified JavaScript developer with expertise in ES6+, DOM manipulation, asynchronous programming, and modern frameworks.</p>
-                        <a href="#" class="btn">View Certificate</a>
+                        <div class="cert-date">2023</div>
+                        <h3>MERN Stack Internship</h3>
+                        <p>Three months comprehensive training in MongoDB, Express, React, and Node.js stack.</p>
+                        <div class="cert-actions">
+                            <span class="cert-issuer">Novitech</span>
+                            <a href="#" class="cert-btn view-cert" data-cert="cert2">View Certificate</a>
+                        </div>
                     </div>
                 </div>
+
+                <!-- 3. Data Analytics Internship - Novitech -->
                 <div class="cert-card">
                     <div class="cert-img">
-                        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="UI/UX Certification">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Data Analytics Certificate">
+                        <div class="cert-overlay">Novitech Solutions</div>
                     </div>
                     <div class="cert-content">
-                        <h3>UI/UX Design Principles</h3>
-                        <p>Certification in user interface and user experience design principles, creating intuitive and engaging digital experiences.</p>
-                        <a href="#" class="btn">View Certificate</a>
+                        <div class="cert-date">2023</div>
+                        <h3>Data Analytics Internship</h3>
+                        <p>One month intensive training in data analytics tools and techniques.</p>
+                        <div class="cert-actions">
+                            <span class="cert-issuer">Novitech</span>
+                            <a href="#" class="cert-btn view-cert" data-cert="cert3">View Certificate</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Full Stack Masterclass -->
+                <div class="cert-card">
+                    <div class="cert-img">
+                        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Full Stack Masterclass Certificate">
+                        <div class="cert-overlay">Masterclass</div>
+                    </div>
+                    <div class="cert-content">
+                        <div class="cert-date">2023</div>
+                        <h3>Full Stack Masterclass</h3>
+                        <p>Advanced one month masterclass covering full stack development concepts.</p>
+                        <div class="cert-actions">
+                            <span class="cert-issuer">Tech Academy</span>
+                            <a href="#" class="cert-btn view-cert" data-cert="cert4">View Certificate</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Internshala Full Stack Training -->
+                <div class="cert-card">
+                    <div class="cert-img">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Internshala Certificate">
+                        <div class="cert-overlay">Internshala</div>
+                    </div>
+                    <div class="cert-content">
+                        <div class="cert-date">2023</div>
+                        <h3>Full Stack Training</h3>
+                        <p>One month intensive full stack development training from Internshala.</p>
+                        <div class="cert-actions">
+                            <span class="cert-issuer">Internshala</span>
+                            <a href="#" class="cert-btn view-cert" data-cert="cert5">View Certificate</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. JavaScript Course - Swayam -->
+                <div class="cert-card">
+                    <div class="cert-img">
+                        <img src="https://images.unsplash.com/photo-1542626991-cbc4e32524cc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="JavaScript Certificate">
+                        <div class="cert-overlay">Swayam</div>
+                    </div>
+                    <div class="cert-content">
+                        <div class="cert-date">2023</div>
+                        <h3>JavaScript Course</h3>
+                        <p>Completed comprehensive JavaScript programming course from Swayam.</p>
+                        <div class="cert-actions">
+                            <span class="cert-issuer">Swayam</span>
+                            <a href="#" class="cert-btn view-cert" data-cert="cert6">View Certificate</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Internshala Offer Letter -->
+                <div class="cert-card">
+                    <div class="cert-img">
+                        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Internshala Offer Letter">
+                        <div class="cert-overlay">GTN College</div>
+                    </div>
+                    <div class="cert-content">
+                        <div class="cert-date">2023</div>
+                        <h3>Internshala Offer Letter</h3>
+                        <p>Offer letter from Internshala recognized by Dean of GTN College.</p>
+                        <div class="cert-actions">
+                            <span class="cert-issuer">GTN College</span>
+                            <a href="#" class="cert-btn view-cert" data-cert="cert7">View Certificate</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. College Rank Certificate -->
+                <div class="cert-card">
+                    <div class="cert-img">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="College Rank Certificate">
+                        <div class="cert-overlay">College</div>
+                    </div>
+                    <div class="cert-content">
+                        <div class="cert-date">2023</div>
+                        <h3>1st Rank Certificate</h3>
+                        <p>Awarded 1st rank certificate in academic performance from college.</p>
+                        <div class="cert-actions">
+                            <span class="cert-issuer">College</span>
+                            <a href="#" class="cert-btn view-cert" data-cert="cert8">View Certificate</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. Debugging Certificate - NPR College -->
+                <div class="cert-card">
+                    <div class="cert-img">
+                        <img src="https://images.unsplash.com/photo-1542626991-cbc4e32524cc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="Debugging Certificate">
+                        <div class="cert-overlay">NPR College</div>
+                    </div>
+                    <div class="cert-content">
+                        <div class="cert-date">2023</div>
+                        <h3>Debugging Program</h3>
+                        <p>Certificate for participating in debugging program at NPR College.</p>
+                        <div class="cert-actions">
+                            <span class="cert-issuer">NPR College</span>
+                            <a href="#" class="cert-btn view-cert" data-cert="cert9">View Certificate</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10. Digital Marketing Certificate -->
+                <div class="cert-card">
+                    <div class="cert-img">
+                        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Digital Marketing Certificate">
+                        <div class="cert-overlay">Bon Secourse</div>
+                    </div>
+                    <div class="cert-content">
+                        <div class="cert-date">2023</div>
+                        <h3>Digital Marketing</h3>
+                        <p>Completed digital marketing course from Bon Secourse College.</p>
+                        <div class="cert-actions">
+                            <span class="cert-issuer">Bon Secourse</span>
+                            <a href="#" class="cert-btn view-cert" data-cert="cert10">View Certificate</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Certificate Modal -->
+    <div id="certModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <img id="modalCertImage" class="modal-cert-img" src="" alt="Certificate">
+            <h3 id="modalCertTitle" class="modal-title"></h3>
+        </div>
+    </div>
 
     <!-- Contact Section -->
     <section class="section" id="contact">
@@ -1019,7 +1396,8 @@
                             <label for="message">Message</label>
                             <textarea id="message" name="message" required></textarea>
                         </div>
-                        <button type="submit" class="submit-btn">Send Message</button>
+                        <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
+                        <div id="formMessage" class="form-message"></div>
                     </form>
                 </div>
             </div>
@@ -1057,9 +1435,15 @@
         <i class="fas fa-arrow-up"></i>
     </div>
 
+    <!-- EmailJS Integration -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
     <!-- JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize EmailJS with your public key
+            emailjs.init('YOUR_EMAILJS_PUBLIC_KEY'); // Replace with your actual EmailJS public key
+
             // Mobile Menu Toggle
             const menuToggle = document.querySelector('.menu-toggle');
             const nav = document.querySelector('#nav');
@@ -1120,16 +1504,93 @@
                 });
             });
 
-            // Form submission
+            // Form submission with EmailJS
             const contactForm = document.getElementById('contactForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const formMessage = document.getElementById('formMessage');
+
             if (contactForm) {
                 contactForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    // Here you would typically send the form data to a server
-                    alert('Thank you for your message! I will get back to you soon.');
-                    contactForm.reset();
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Sending...';
+                    
+                    // Send email using EmailJS
+                    emailjs.sendForm('service_vkhy30k', 'template_3fbzkbq', this)
+                        .then(function() {
+                            formMessage.textContent = 'Message sent successfully! I will get back to you soon.';
+                            formMessage.classList.add('success');
+                            formMessage.classList.remove('error');
+                            contactForm.reset();
+                        }, function(error) {
+                            formMessage.textContent = 'Failed to send message. Please try again later or contact me directly at alagesanalagu178@gmail.com';
+                            formMessage.classList.add('error');
+                            formMessage.classList.remove('success');
+                        })
+                        .finally(function() {
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Send Message';
+                        });
                 });
             }
+
+            // Certificate Modal functionality
+            const modal = document.getElementById('certModal');
+            const modalImg = document.getElementById('modalCertImage');
+            const modalTitle = document.getElementById('modalCertTitle');
+            const closeModal = document.querySelector('.close-modal');
+            const viewCertBtns = document.querySelectorAll('.view-cert');
+
+            // Certificate images data (replace with your actual certificate images)
+            const certImages = {
+                cert1: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                cert2: 'https://images.unsplash.com/photo-1542626991-cbc4e32524cc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80',
+                cert3: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                cert4: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                cert5: 'https://images.unsplash.com/photo-1542626991-cbc4e32524cc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80',
+                cert6: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                cert7: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                cert8: 'https://images.unsplash.com/photo-1542626991-cbc4e32524cc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80',
+                cert9: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80',
+                cert10: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'
+            };
+
+            // Certificate titles data
+            const certTitles = {
+                cert1: 'Full Stack Internship - Novitech',
+                cert2: 'MERN Stack Internship - Novitech',
+                cert3: 'Data Analytics Internship - Novitech',
+                cert4: 'Full Stack Masterclass',
+                cert5: 'Full Stack Training - Internshala',
+                cert6: 'JavaScript Course - Swayam',
+                cert7: 'Internshala Offer Letter - GTN College',
+                cert8: '1st Rank Certificate - College',
+                cert9: 'Debugging Program - NPR College',
+                cert10: 'Digital Marketing - Bon Secourse'
+            };
+
+            viewCertBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const certId = this.getAttribute('data-cert');
+                    modalImg.src = certImages[certId];
+                    modalTitle.textContent = certTitles[certId];
+                    modal.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            closeModal.addEventListener('click', function() {
+                modal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            });
+
+            window.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    document.body.style.overflow = 'auto';
+                }
+            });
 
             // Animate elements when they come into view
             const animateOnScroll = function() {
@@ -1148,7 +1609,7 @@
                     if (cardTop < window.innerHeight - 100) {
                         setTimeout(() => {
                             card.classList.add('visible');
-                        }, index * 200);
+                        }, index * 100);
                     }
                 });
             };
