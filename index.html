@@ -983,6 +983,35 @@
                 font-size: 0.8rem;
             }
         }
+
+
+        /* BUTTON + LOADING */
+.cta-download{
+  display:inline-flex;
+  gap:10px;
+  align-items:center;
+  padding:10px 16px;
+  border-radius:999px;
+  border:0;
+  cursor:pointer;
+  font-weight:700;
+  background:linear-gradient(90deg,var(--primary-color,#3498db), #06b6d4);
+  color:#fff;
+  box-shadow:0 10px 30px rgba(6,22,40,0.18);
+  transition:transform .16s ease, box-shadow .16s ease, opacity .16s ease;
+  min-height:44px;
+}
+.cta-download i{ font-size:16px; transform-origin:center; transition:transform .18s ease; }
+
+/* loading state */
+.cta-download.loading{ pointer-events:none; opacity:.9; transform:scale(.995); }
+.cta-download .spinner{ margin-left:8px; width:16px; height:16px; border:2px solid rgba(255,255,255,0.28); border-top-color:#fff; border-radius:50%; animation:spin .9s linear infinite; display:inline-block; vertical-align:middle; }
+
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* small hover */
+.cta-download:hover{ transform:translateY(-3px); box-shadow:0 18px 40px rgba(6,22,40,0.22); }
+
     </style>
 </head>
 <body>
@@ -1013,6 +1042,15 @@
                 <h1>Hi, I'm <span>Alagesan chinraj</span></h1>
                 <p>Full Stack Developer (MERN & Java) at Growthin IT Solutions</p>
                 <a href="#contact" class="btn">Get In Touch</a>
+
+
+                <!-- BUTTON -->
+<button id="btnDownloadResume" class="cta-download" 
+        data-resume-url="https://raw.githubusercontent.com/alagesanalagesan/p/main/src/full-stack-developer%20(2).pdf" 
+        aria-label="Download resume PDF">
+  <i class="fas fa-download" aria-hidden="true"></i> Download Resume
+</button>
+
                 <div class="social-icons">
                     <a href="https://www.instagram.com/its_me_lovly_alagesan/"><i class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
@@ -1624,6 +1662,62 @@
             // Run on scroll
             window.addEventListener('scroll', animateOnScroll);
         });
+
+
+        // Insert this inside your existing DOMContentLoaded handler or at end of script
+const btnDownload = document.getElementById('btnDownloadResume');
+if (btnDownload) {
+  btnDownload.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const rawUrl = btnDownload.dataset.resumeUrl;
+    if (!rawUrl) return alert('Resume URL missing on button (data-resume-url).');
+
+    // show loading
+    btnDownload.classList.add('loading');
+    const spinner = document.createElement('span');
+    spinner.className = 'spinner';
+    btnDownload.appendChild(spinner);
+
+    try {
+      // Try to fetch the raw PDF and force a download via blob
+      const res = await fetch(rawUrl, { mode: 'cors' });
+      if (!res.ok) throw new Error('Network response not ok: ' + res.status);
+
+      const blob = await res.blob();
+
+      // Infer filename or fallback
+      let filename = 'Alagesan_Resume.pdf';
+      const cd = res.headers.get('content-disposition') || '';
+      const m = cd.match(/filename\*=UTF-8''([^;]+)|filename="?([^";]+)"?/);
+      if (m) filename = decodeURIComponent(m[1] || m[2]);
+
+      // Create temporary link to download
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      // tiny success feedback
+      btnDownload.classList.add('done');
+      setTimeout(()=> btnDownload.classList.remove('done'), 900);
+    } catch (err) {
+      console.error('Download failed:', err);
+      // Fallback: open raw URL in new tab so user can save manually (works around CORS)
+      const openFallback = confirm('Direct download failed (CORS/network). Open resume in new tab instead?');
+      if (openFallback) window.open(rawUrl, '_blank', 'noopener');
+    } finally {
+      // cleanup
+      btnDownload.classList.remove('loading');
+      const s = btnDownload.querySelector('.spinner');
+      if (s) s.remove();
+    }
+  });
+}
+
     </script>
 </body>
 </html>
